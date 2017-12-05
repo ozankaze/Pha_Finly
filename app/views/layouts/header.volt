@@ -32,5 +32,10 @@
   <![endif]-->
 
   <!-- Google Font -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  {{ javascript_include("assets/pnotify/src/pnotify.js") }}
+  {{ stylesheet_link("assets/pnotify/src/pnotify.css") }}
+
+  {#<script type="text/javascript" src="pnotify.custom.min.js"></script>
+  <link href="pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />#}
