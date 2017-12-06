@@ -16,7 +16,7 @@
 
   <!-- Main content -->
   <section class="content">
-    <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-default">
+    <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-default" onclick="return send_data_add();">
       Add User
     </button>
     <br>
@@ -41,7 +41,7 @@
             <tbody>
               <?php $no=1 ?> <?php foreach ($data_user as $user) { ?>
               
-              <tr>
+              <tr id="data_<?= $user->id ?>">
                 <td>
                   <?php echo $no++; ?>
                 </td>
@@ -49,10 +49,10 @@
                 <td><?= $user->password ?></td>
                 <td><?= $user->type ?></td>
                 <td>
-                  <button type="button" class="btn btn-warning">
+                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-default" onclick="return send_data_edit('<?= $user->id ?>');">
                     Edit
                   </button>
-                  <button type="button" class="btn btn-danger">
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-default" onclick="return hapus_data_user();">
                     Delete
                   </button>
                 </td>
@@ -80,6 +80,9 @@
             <h4 class="modal-title">Tambah User</h4>
           </div>
           <div class="modal-body">
+            <div class="input-group-id">
+              <input type="hidden" name="id" class="form-control id"> 
+            </div>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
               <input type="text" name="username" class="form-control" placeholder="Username">
@@ -97,7 +100,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="return addUser();">Add User</button>
+            <button type="button" class="btn btn-primary btnAction" onclick="return addUser();">Add User</button>
           </div>
         </div>
       </form>
@@ -109,11 +112,54 @@
 </div>
 <!-- /.content-wrapper -->
 <script>
+  function send_data_add() {
+    $('.modal-title').text('Tambah User');
+    $('.btnAction').attr('onclick',"return addUser();");
+    $('.btnAction').attr('class',"btn btn-primary btnAction");
+    $('.btnAction').text('Tambah User');
+  }
+
   function addUser() {
     $.ajax({
       method: "POST",
       dataType: "json",
       url: "<?= $this->url->get('user/addUser') ?>",
+      data: $('form.addUser').serialize(),
+      succes: function(res){
+        new PNotify({
+          title: res.title,
+          text: res.text,
+          type: res.type,
+        });
+      }
+    });
+  }
+
+  function send_data_edit(id)
+  {
+    $('.modal-title').text('Edit User ' + id);
+    $('.input-group-id').append('<input type="hidden" name="id" class="form-control id">');
+    $('.btnAction').attr('onclick',"return editUser();");
+    $('.btnAction').attr('class',"btn btn-warning btnAction");
+    $('.btnAction').text('Edit User');
+
+    var username = $('#data_' + id + '> td').eq(1).html();
+    var password = $('#data_' + id + '> td').eq(2).html();
+    var type = $('#data_' + id + '> td').eq(3).html();
+
+    $('input[name=id]').val(id);
+    $('input[name=username]').val(username);
+    $('input[name=password]').val(password);
+    $('input[name=type]').val(type);
+
+  }
+
+
+  function editUser() {
+    $.ajax({
+      method: "POST",
+      dataType: "json",
+      url: "<?= $this->url->get('user/editUser') ?>",
       data: $('form.addUser').serialize(),
       succes: function(res){
         new PNotify({

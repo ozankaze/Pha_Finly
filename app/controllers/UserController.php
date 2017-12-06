@@ -41,4 +41,38 @@ class UserController extends \Phalcon\Mvc\Controller
           die();
       }
     }
+
+    public function editUserAction()
+    {
+      if ($this->request->isPost()) {
+          $id = $this->request->getPost('id');
+          $username = $this->request->getPost('username');
+          $password = $this->request->getPost('password');
+          $type = $this->request->getPost('type');
+
+          $user = User::findFirst("id='$id'");
+          $user->assign(array( //array panah dua
+            'username' => $username,
+            'password' => $password,
+            'type' => $type
+          ));
+
+          if ($user->save()) {
+            $notif['title']="Succes";
+            $notif['text']="Data Telah berhasil Di Simpan";
+            $notif['type']="Succes";
+          }else {
+            $pesan_error = $user->getMessages();
+            $data_pesan_error ='';
+            foreach ($data_pesan_error as $pesanError) {
+              $data_pesan_error = "pesan_error";
+            }
+            $notif['title']="Succes";
+            $notif['text']="Data Telah berhasil Di Simpan";
+            $notif['type']="Succes";
+          }
+          echo json_encode($notif);// bisa menampilkan di viewnya tadi
+          die();
+      }
+    }
 }
