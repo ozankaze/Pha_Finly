@@ -32,19 +32,21 @@
             <thead>
               <tr>
                 <th>No</th>
+                <th>Cabang ID</th>
                 <th>Username</th>
                 <th>Password</th>
                 <th>Type</th>
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="listUser">
               <?php $no=1 ?> <?php foreach ($data_user as $user) { ?>
               
               <tr id="data_<?= $user->id ?>">
                 <td>
                   <?php echo $no++; ?>
                 </td>
+                <td><?= $user->cabang_id ?></td>
                 <td><?= $user->username ?></td>
                 <td><?= $user->password ?></td>
                 <td><?= $user->type ?></td>
@@ -52,7 +54,7 @@
                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-default" onclick="return send_data_edit('<?= $user->id ?>');">
                     Edit
                   </button>
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-default" onclick="return hapus_data_user();">
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-delete" onclick="return send_data_delete('<?= $user->id ?>');">
                     Delete
                   </button>
                 </td>
@@ -75,13 +77,17 @@
       
       <form class="addUser" action="user/addUser" method="post">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Tambah User</h4>
           </div>
           <div class="modal-body">
             <div class="input-group-id">
               <input type="hidden" name="id" class="form-control id"> 
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
+              <input type="text" name="cabang_id" class="form-control" placeholder="Cabang ID">
             </div>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-user-o"></i></span>
@@ -110,6 +116,37 @@
   </div>
   <!-- /.content -->
 </div>
+
+
+<div class="modal modal-danger" id="modal-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <form class="deleteUser" action="user/deleteUser" method="post">
+        <div class="modal-header">
+          <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Tambah User</h4>
+          </div>
+          <div class="modal-body">
+            <div class="input-group-id">
+              <input type="hidden" name="id" class="form-control id"> 
+            </div>
+            Apakah Anda ingin Menghapus Ini ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-outline btnAction" onclick="return deleteUser();">Delete User</button>
+          </div>
+        </div>
+      </form>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.content -->
+</div>
+
 <!-- /.content-wrapper -->
 <script>
   function send_data_add() {
@@ -130,7 +167,10 @@
           title: res.title,
           text: res.text,
           type: res.type,
+          addclass: "stack-bottomright"
         });
+
+        $('.close-modal').click();
       }
     });
   }
@@ -161,13 +201,57 @@
       dataType: "json",
       url: "<?= $this->url->get('user/editUser') ?>",
       data: $('form.addUser').serialize(),
-      succes: function(res){
+      success: function(res){
         new PNotify({
           title: res.title,
           text: res.text,
           type: res.type,
+          addclass: "stack-bottomright"
         });
+
+        $('.close-modal').click();
       }
     });
   }
+
+  function send_data_delete(id) {
+    $('input[name=id]').val(id);
+    $('modal-title').text('Delete User');
+
+    $('.btnAction').attr('onclick',"return deleteUser();");
+    $('.btnAction').attr('class',"btn btn-outline btnAction");
+    $('.btnAction').text('Delete User');
+  }
+
+  function deleteUser() {
+    $.ajax({
+      method: "POST",
+      dataType: "json",
+      url: "<?= $this->url->get('user/deleteUser') ?>",
+      data: $('form.deleteUser').serialize(),
+      success: function(res){
+        new PNotify({
+          title: res.title,
+          text: res.text,
+          type: res.type,
+          addclass: "stack-bottomright"
+        });
+
+        $('.close-modal').click();
+      }
+    });
+  }
+
+
+  function listUser() {
+    $.ajax ({
+      method:"GET",
+      url:"<?= $this->url->get('user/listUser') ?>",
+      datatype: "html",
+      success: function(res) {
+        $('#listUser').html(res);
+      }
+    });
+  }
+
 </script>

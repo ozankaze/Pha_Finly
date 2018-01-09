@@ -14,6 +14,11 @@
 <!-- AdminLTE for demo purposes -->
 <?= $this->tag->javascriptInclude('assets/dist/js/demo.js') ?>
 
+<?= $this->tag->javascriptInclude('assets/pnotify/pnotify.js') ?>
+<?= $this->tag->javascriptInclude('assets/pnotify/pnotify.button.js') ?>
+<?= $this->tag->javascriptInclude('assets/pnotify/pnotify.nonblock.js') ?>
+
+
 
 <!-- page script -->
 <script>

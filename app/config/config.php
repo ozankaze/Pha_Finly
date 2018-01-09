@@ -12,7 +12,7 @@ return new \Phalcon\Config([
         'host'        => 'localhost',
         'username'    => 'root',
         'password'    => '131410003',
-        'dbname'      => 'phalcon-magelang',
+        'dbname'      => 'qodr',
         'charset'     => 'utf8',
     ],
     'application' => [

@@ -14,6 +14,11 @@
 <!-- AdminLTE for demo purposes -->
 {{ javascript_include("assets/dist/js/demo.js") }}
 
+{{ javascript_include("assets/pnotify/pnotify.js") }}
+{{ javascript_include("assets/pnotify/pnotify.button.js") }}
+{{ javascript_include("assets/pnotify/pnotify.nonblock.js") }}
+
+
 
 <!-- page script -->
 <script>
